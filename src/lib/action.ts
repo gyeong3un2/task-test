@@ -19,13 +19,17 @@ export const sendEmail = async (prevState: any, formData: FormData) => {
   try {
     const { name, email, subject } = Object.fromEntries(formData); // FormData를 Object로 변환
 
+    if (!name || !email || !subject) {
+      return { message: '모든 항목을 입력해주세요.' };
+    }
+
     await transporter.sendMail({
       from: process.env.NEXT_PUBLIC_NAVER_ID, // 보내는 이메일
       to: email && String(email), // 받는 이메일
-      subject: `문의하기: ${name}(${email})`, // 이메일 제목
-      html: `<h1>문의 내용</h1>
-            <p>${subject}</p>
-            `,
+      subject: `[Wraffle] 비밀번호 재설정`, // 이메일 제목
+      html: `<span>안녕하세요, Wraffle입니다.</span><br />
+             <span>${email} 계정의 비밀번호 재설정이 필요하시면 아래 버튼을 눌러주세요.</span><br /><br />
+             <a href="http://localhost:3000" style="background-color: #4CAF50; color: white; padding: 14px 20px; text-align: center; text-decoration: none; display: inline-block; border: none; cursor: pointer;">비밀번호 재설정</a><br /><br />`,
     });
 
     console.log('이메일 전송 성공!');
